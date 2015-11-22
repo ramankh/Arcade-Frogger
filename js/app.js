@@ -48,6 +48,7 @@ var Player = function(x,y) {
     this.active = false;
     this.rx = this.x + 68;
     this.ry = this.y + 77;
+    this.score = 0;
     this.sprite = 'images/char-boy.png';
 };
 
@@ -94,6 +95,7 @@ Player.prototype.handleInput = function(inp){
         default:
         break;
     }
+    this.score += 10;
     this.update();
 };
 

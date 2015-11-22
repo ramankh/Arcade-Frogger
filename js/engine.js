@@ -27,6 +27,8 @@
      canvas.width = 505;
      canvas.height = 606;
      doc.body.appendChild(canvas);
+     scoreLabel = doc.createElement('p');
+     doc.body.appendChild(scoreLabel);
      doc.body.appendChild(doc.createElement('button'));
 
 
@@ -133,6 +135,7 @@ function checkCollisions() {
          * and, using the rowImages array, draw the correct image for that
          * portion of the "grid"
          */
+
          for (row = 0; row < numRows; row++) {
             for (col = 0; col < numCols; col++) {
                 /* The drawImage function of the canvas' context element
@@ -146,6 +149,12 @@ function checkCollisions() {
                  ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
              }
          }
+         ctx.drawImage(Resources.get("images/Heart.png"), 0,-10, 40, 60);
+         ctx.font = "32pt Arial";
+         ctx.strokeStyle = "white";
+         ctx.lineWidth = 0.01;
+         ctx.strokeText(player.score, 55, 50);
+         scoreLabel.innerHTML= player.score;
          //state that game is started and the player is active now.
          //usage: to find out how to handel key inputs
          player.active = true;
@@ -251,8 +260,9 @@ ctx.strokeText("Choose your character and start the journey!",250, 180);
         'images/char-princess-girl.png',
         'images/char-cat-girl.png',
         'images/Gem Blue.png',
-        'images/button-next.png' // icon downloaded from http://www.iconarchive.com/
-        ]);
+        'images/button-next.png', // icon downloaded from http://www.iconarchive.com/
+        'images/Heart.png']
+        );
      Resources.onReady(init);
 
     /* Assign the canvas' context object to the global variable (the window
