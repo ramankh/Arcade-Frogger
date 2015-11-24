@@ -7,6 +7,9 @@ var Enemy = function(index,x,y,speed) {
     this.x = x;
     this.y = y;
     this.index = index;
+    //because pictures used for characres contain some blank
+    //spaces then we need to add on starting point and we call theme
+    //rx and ry
     this.rx = this.x+94;
     this.ry = this.y+67;
     this.speed = speed;
@@ -15,7 +18,6 @@ var Enemy = function(index,x,y,speed) {
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
 }
-
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
@@ -26,12 +28,10 @@ Enemy.prototype.update = function(dt) {
         this.x = this.startX;
         this.rx = this.x+94;
         this.y = this.startY;
-    }
-    else {
+    } else {
         this.x += this.speed*dt;
         this.rx = this.x +94;
     }
-
 };
 
 // Draw the enemy on the screen, required method for game
@@ -39,43 +39,42 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
+//this class represents Player
 var Player = function(x,y) {
     this.x = x;
     this.y = y;
     this.active = false;
+    //because pictures used for characres contain some blank
+    //spaces then we need to add on starting point and we call theme
+    //rx and ry
     this.rx = this.x + 68;
     this.ry = this.y + 77;
     this.sprite = 'images/char-boy.png';
 };
-
+// render function (player) draws player char on screen
 Player.prototype.render = function(){
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-   // ctx.drawImage(Resources.get('images/Gem Blue.png'), 50, 50);
 };
 
+//update function updates location of the player
 Player.prototype.update = function(dt){
 
-//checks if player cross the borders
+//checks if player cross the screen borders
 if(this.x>= ctx.canvas.width-65){
     this.x = ctx.canvas.width-65
+} else if(this.x<=0){
+   // this.x+=diff[2];
+} else if(this.y<=0){
+   // this.y+=diff[3];
 }
-else if(this.x<=0){
-    this.x = -diff[2];
-}
-else if(this.y<=0){
-    this.y = -diff[3];
-}
-else if(this.y>=ctx.canvas.height-171){
+if(this.y>=ctx.canvas.height-171){
     this.y = ctx.canvas.height-(171);
 }
 
 this.rx = this.x + 68;
 this.ry = this.y + 77;
 };
-
+// this function controls movement of player based on keyboard input
 Player.prototype.handleInput = function(inp){
     var mov = 95;
     switch(inp) {
@@ -116,14 +115,11 @@ function collisionDetect(){
             player.y = 430;
             player.render();
         }
-        else {
-
-        }
     });
 }
 
-var playerChar = function(x, y, imageIndex){
-    this.imageIndex = imageIndex;
+var playerChar = function(x, y, charPath){
+    this.charPath = charPath;
     this.x = x;
     this.y = y;
     this.selected = false;
@@ -133,8 +129,7 @@ var playerChar = function(x, y, imageIndex){
     this.isHovered = function(mouseX,mouseY, offsetLeft, offsetTop) {
         if((mouseX>this.x+diff[2]+offsetLeft && mouseX<this.x+diff[2]+offsetLeft+68) &&
             (mouseY>this.y+diff[3]+offsetTop && mouseY<this.y+diff[3]+offsetTop+77)){
-            //console.log(this.name+": "+mouseX+","+mouseY +"|| offsetLeft: "+ offsetLeft+" offsetTop: "+offsetTop);
-        return true;
+            return true;
     }
 }
     //this function draws a yellow border around char if it is selected
@@ -146,52 +141,8 @@ var playerChar = function(x, y, imageIndex){
     }
 }
 
-playerChar.prototype.handleInput = function(inp){
-    var index = this.imageIndex;
-    switch(inp) {
-        case 'left':
-        if(this.imageIndex!=0){
-            playerChars[--index].isSelected();
-        };
-        break;
-        case 'right':
-        if(this.imageIndex!=3){
-            playerChars[++index].isSelected();
-        }
-        else{
-            playerChars[0].isSelected();
-        }
-        break;
-        default:
-        break;
-    }
-};
-
 //this array keeps every blocks starting point
 var playerChars = [];
-
-// gemPlacer randomly creats gems in the play field
-// gems have diffrent styles and diffrent scores!
-
-function gemPlacer(){
-    //xRange and yRange defines the x and y ranges where gems can possibly appear
-    //first itme is the minimum and the second one is max
-    var xRange = [200,400];
-    var yRange = [200,400];
-
-    var startX = Math.floor(Math.random()*(xRange[1]-xRange[0])+xRange[0]);
-    var startY = Math.floor(Math.random()*(yRange[1]-yRange[0])+yRange[0]);
-    ctx.drawImage(Resources.get('images/Gem Blue.png'), 50, 50);
-    console.log(startX + " " + startY);
-}
-
-
-
-
-
-
-
-
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
@@ -214,17 +165,5 @@ document.addEventListener('keyup', function(e) {
         39: 'right',
         40: 'down'
     };
-    if(player.active!=false){
-        player.handleInput(allowedKeys[e.keyCode]);
-    }
-    else {
-
-        for(pc in playerChars) {
-            if(playerChars[pc].selected==true){
-                playerChars[pc].selected=false;
-                playerChars[pc].handleInput(allowedKeys[e.keyCode]);
-                break;
-            }
-        }
-    }
+    player.handleInput(allowedKeys[e.keyCode]);
 });
