@@ -146,6 +146,7 @@ function checkCollisions() {
              }
          }
          //scoreLabel.innerHTML= player.score;
+
          renderEntities();
      }
 
@@ -189,6 +190,7 @@ function checkCollisions() {
         var btn = doc.querySelector('button');
         btn.innerHTML = "start";
         btn.addEventListener("click", function(){ console.log("REDER");
+            $(".heart").css("display", "inline");
             main();
         });
     }
@@ -206,6 +208,8 @@ function checkCollisions() {
             }
         });
     });
+
+
 
     canvas.addEventListener("mousemove", function(event){
        // console.log(event.clientX + ", " + event.clientY);
