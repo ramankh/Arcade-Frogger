@@ -43,7 +43,7 @@ Enemy.prototype.render = function() {
 var Player = function(x,y) {
     this.x = x;
     this.y = y;
-    this.active = false;
+    this.lives = 5;
     //because pictures used for characres contain some blank
     //spaces then we need to add on starting point and we call theme
     //rx and ry
@@ -97,6 +97,27 @@ Player.prototype.handleInput = function(inp){
     this.score += 10;
     this.update();
 };
+Player.prototype.updateLives = function(lives){
+    switch(lives){
+        case 4:
+        $("#heart-five").css("display","none");
+        break;
+        case 3:
+        $("#heart-four").css("display","none");
+        break;
+        case 2:
+        $("#heart-three").css("display","none");
+        break;
+        case 1:
+        $("#heart-two").css("display","none");
+        break;
+        case 0:
+        $("#heart-one").css("display","none");
+        break;
+        default:
+        break;
+    }
+};
 
 // diff represents the white spaces around each character (to find exact collision):
 // diff[0] -> enemies x-whiteSpace/2
@@ -115,6 +136,8 @@ function collisionDetect(){
                 enemy.rx<player.x+diff[2] || player.rx < enemy.x+diff[0])){
                 player.x = ctx.canvas.width/2-53.5;
             player.y = 430;
+            player.lives--;
+            player.updateLives(player.lives)
             player.render();
         }
     });

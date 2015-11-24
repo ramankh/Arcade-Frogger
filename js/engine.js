@@ -21,18 +21,15 @@
      */
      var doc = global.document,
      win = global.window,
-     canvas = doc.createElement('canvas'),
+     canvas = document.getElementById("gameCanvas"), //doc.createElement('canvas'),
      ctx = canvas.getContext('2d'),
      lastTime;
-     canvas.width = 505;
-     canvas.height = 606;
-     doc.body.appendChild(canvas);
-     scoreLabel = doc.createElement('p');
-     doc.body.appendChild(scoreLabel);
-     doc.body.appendChild(doc.createElement('button'));
-
-
-
+     //canvas.width = 505;
+     //canvas.height = 606;
+     //scoreLabel = doc.createElement('p');
+     //doc.body.appendChild(scoreLabel);
+    // doc.body.appendChild(canvas);
+    doc.body.appendChild(doc.createElement('button'));
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
      */
@@ -145,55 +142,46 @@ function checkCollisions() {
                  * so that we get the benefits of caching these images, since
                  * we're using them over and over.
                  */
-
                  ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
              }
          }
-         ctx.drawImage(Resources.get("images/Heart.png"), 0,-10, 40, 60);
-         ctx.font = "32pt Arial";
-         ctx.strokeStyle = "white";
-         ctx.lineWidth = 0.01;
-         ctx.strokeText(player.score, 55, 50);
-         scoreLabel.innerHTML= player.score;
-         //state that game is started and the player is active now.
-         //usage: to find out how to handel key inputs
-         player.active = true;
+         //scoreLabel.innerHTML= player.score;
          renderEntities();
      }
 
      function renderMenue() {
-         var rowImage = 'images/stone-block.png',
-         numRows = 6,
-         numCols = 5,
-         row, col, charRow=160, charCol=50,
-         charImages = [
-         'images/char-boy.png',
-         'images/char-pink-girl.png',
-         'images/char-princess-girl.png',
-         'images/char-cat-girl.png',
-         ];
+       var rowImage = 'images/stone-block.png',
+       numRows = 6,
+       numCols = 5,
+       row, col, charRow=160, charCol=50,
+       charImages = [
+       'images/char-boy.png',
+       'images/char-pink-girl.png',
+       'images/char-princess-girl.png',
+       'images/char-cat-girl.png',
+       ];
 
-         for (row = 0; row < numRows; row++) {
-            for (col = 0; col < numCols; col++) {
-               ctx.drawImage(Resources.get(rowImage), col * 101, row * 83);
-           }
-       }
+       for (row = 0; row < numRows; row++) {
+        for (col = 0; col < numCols; col++) {
+         ctx.drawImage(Resources.get(rowImage), col * 101, row * 83);
+     }
+ }
 
-       for(var index=0; index<charImages.length; index++){
-           ctx.drawImage(Resources.get(charImages[index]), charCol, charRow );
-           var pc = new playerChar(charCol, charRow, charImages[index]);
-           playerChars.push(pc);
-           charCol+=100;
-       };
-       playerChars[0].selected =true;
-       ctx.font = "36pt Impact";
-       ctx.textAlign = "center";
-       ctx.strokeStyle = 'black';
-       ctx.lineWidth = 3;
-       ctx.strokeText("WELCOME",250, 100);
-       ctx.font = "20pt Impact";
-       ctx.lineWidth = 2;
-       ctx.strokeText("Choose your character and start the journey!",250, 180);
+ for(var index=0; index<charImages.length; index++){
+     ctx.drawImage(Resources.get(charImages[index]), charCol, charRow );
+     var pc = new playerChar(charCol, charRow, charImages[index]);
+     playerChars.push(pc);
+     charCol+=100;
+ };
+ playerChars[0].selected =true;
+ ctx.font = "36pt Impact";
+ ctx.textAlign = "center";
+ ctx.strokeStyle = 'black';
+ ctx.lineWidth = 3;
+ ctx.strokeText("WELCOME",250, 100);
+ ctx.font = "20pt Impact";
+ ctx.lineWidth = 2;
+ ctx.strokeText("Choose your character and start the journey!",250, 180);
  //strt game button
  ctx.drawImage(Resources.get('images/button-next.png'), 215, 385 );
 
