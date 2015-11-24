@@ -179,21 +179,21 @@ function checkCollisions() {
            }
        }
 
-       for(char in charImages){
-           ctx.drawImage(Resources.get(charImages[char]), charCol, charRow );
-           var pc = new playerChar(charCol, charRow, char);
+       for(var index=0; index<charImages.length; index++){
+           ctx.drawImage(Resources.get(charImages[index]), charCol, charRow );
+           var pc = new playerChar(charCol, charRow, charImages[index]);
            playerChars.push(pc);
            charCol+=100;
        };
        playerChars[0].selected =true;
-ctx.font = "36pt Impact";
-ctx.textAlign = "center";
-ctx.strokeStyle = 'black';
-ctx.lineWidth = 3;
-ctx.strokeText("WELCOME",250, 100);
-ctx.font = "20pt Impact";
-ctx.lineWidth = 2;
-ctx.strokeText("Choose your character and start the journey!",250, 180);
+       ctx.font = "36pt Impact";
+       ctx.textAlign = "center";
+       ctx.strokeStyle = 'black';
+       ctx.lineWidth = 3;
+       ctx.strokeText("WELCOME",250, 100);
+       ctx.font = "20pt Impact";
+       ctx.lineWidth = 2;
+       ctx.strokeText("Choose your character and start the journey!",250, 180);
  //strt game button
  ctx.drawImage(Resources.get('images/button-next.png'), 215, 385 );
 
@@ -211,9 +211,10 @@ ctx.strokeText("Choose your character and start the journey!",250, 180);
             if(pc.isHovered(event.clientX, event.clientY, canvas.offsetLeft, canvas.offsetTop)){
                 //console.log(pc.name+" is hovered");
                 renderMenue();
+                //put chars image path into player sprite property
+                player.sprite = pc.charPath;
                 pc.isSelected();
-                //saves the selected player char in player
-                player.sprite = pc.name;
+
             }
         });
     });
