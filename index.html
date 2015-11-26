@@ -7,17 +7,25 @@
 </head>
 <body>
 	<div class="overlay"></div>
-	<div class="messageBox">
+	<div id="lostBox" class="messageBox">
 		<h1>Game Over!</h1>
 		<!-- <img id="heart-one" class="heart" src="images/char-boy.png"> -->
-		<!-- <button>GO TO MAIN MENUE</button> -->
+		<button id="lostBtn" class="restartBtn">GO TO MAIN MENU</button>
+	</div>
+	<div id="winBox" class="messageBox">
+		<h1>You Win!</h1>
+		<!-- <img id="heart-one" class="heart" src="images/char-boy.png"> -->
+		<button id="winBtn" class="restartBtn">GO TO MAIN MENU</button>
 	</div>
 	<div class="container">
-		<img id="heart-one" class="heart" src="images/Heart.png">
-		<img id="heart-two" class="heart" src="images/Heart.png">
-		<img id="heart-three" class="heart" src="images/Heart.png">
-		<img id="heart-four" class="heart" src="images/Heart.png">
-		<img id="heart-five" class="heart" src="images/Heart.png">
+		<div class="heartContainer">
+			<img id="heart-one" class="heart" src="images/Heart.png">
+			<img id="heart-two" class="heart" src="images/Heart.png">
+			<img id="heart-three" class="heart" src="images/Heart.png">
+			<img id="heart-four" class="heart" src="images/Heart.png">
+			<img id="heart-five" class="heart" src="images/Heart.png">
+		</div>
+
 		<!-- <p class="score">fdfdfd</p> -->
 		<canvas id="gameCanvas" width="505" height="606"></canvas>
 	</div>

@@ -23,17 +23,27 @@
      win = global.window,
      canvas = document.getElementById("gameCanvas"), //doc.createElement('canvas'),
      ctx = canvas.getContext('2d'),
+     animReqId,
      lastTime;
      //canvas.width = 505;
      //canvas.height = 606;
      //scoreLabel = doc.createElement('p');
      //doc.body.appendChild(scoreLabel);
     // doc.body.appendChild(canvas);
-    doc.body.appendChild(doc.createElement('button'));
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
      */
-     function main() {
+
+    $(".restartBtn").click(function(){
+        win.cancelAnimationFrame(animReqId);
+        $(".overlay").css("display", "none");
+        $(".messageBox").css("display", "none");
+        $(".heart").css("display", "none");
+        reset();
+    });
+
+
+    function main() {
         /* Get our time delta information which is required if your game
          * requires smooth animation. Because everyone's computer processes
          * instructions at different speeds we need a constant value that
@@ -58,7 +68,7 @@ dt = (now - lastTime) / 1000.0;
         /* Use the browser's requestAnimationFrame function to call this
          * function again as soon as the browser is able to draw another frame.
          */
-         win.requestAnimationFrame(main);
+         animReqId = win.requestAnimationFrame(main);
      }
 
     /* This function does some initial setup that should only occur once,
@@ -68,7 +78,7 @@ dt = (now - lastTime) / 1000.0;
      function init() {
         reset();
         lastTime = Date.now();
-        renderMenue();
+        reset();
         playerChars[0].isSelected();
 
    //     main();
@@ -149,8 +159,11 @@ function checkCollisions() {
 
          renderEntities();
      }
-
-     function renderMenue() {
+    /* This function does nothing but it could have been a good place to
+     * handle game reset states - maybe a new game menu or a game over screen
+     * those sorts of things. It's only called once by the init() method.
+     */
+     function reset() {
        var rowImage = 'images/stone-block.png',
        numRows = 6,
        numCols = 5,
@@ -158,7 +171,7 @@ function checkCollisions() {
        charImages = [
        'images/char-boy.png',
        'images/char-pink-girl.png',
-       'images/char-princess-girl.png',
+       'images/char-horn-girl.png',
        'images/char-cat-girl.png',
        ];
 
@@ -185,36 +198,28 @@ function checkCollisions() {
  ctx.strokeText("Choose your character and start the journey!",250, 180);
  //strt game button
  ctx.drawImage(Resources.get('images/button-next.png'), 215, 385 );
+}
 
-        //test btn
-        var btn = doc.querySelector('button');
-        btn.innerHTML = "start";
-        btn.addEventListener("click", function(){ console.log("REDER");
-            $(".heart").css("display", "inline");
-            main();
-        });
-    }
-
-    canvas.addEventListener('click', function(event){
-        //console.log(event.clientX);
-        playerChars.forEach(function(pc){
-            if(pc.isHovered(event.clientX, event.clientY, canvas.offsetLeft, canvas.offsetTop)){
-                //console.log(pc.name+" is hovered");
-                renderMenue();
+canvas.addEventListener('click', function(event){
+    playerChars.forEach(function(pc){
+        if(pc.isHovered(event.clientX, event.clientY, canvas.offsetLeft, canvas.offsetTop)){
+            reset();
                 //put chars image path into player sprite property
                 player.sprite = pc.charPath;
                 pc.isSelected();
 
             }
         });
-    });
-
-
-
-    canvas.addEventListener("mousemove", function(event){
-       // console.log(event.clientX + ", " + event.clientY);
-
-   });
+    //circle center: a = 215+36, b = 385+36
+    //r = 36
+    //P(x,y) is in a circle if: r^2<(x-a)^2+(x-b)^2 where a,b are circle center
+    if(Math.pow(event.clientX-251,2)+Math.pow(event.clientY-421,2)<1296){
+        //console.log("circle");
+        $(".heartContainer").css("display", "block");
+        $(".heart").css("display", "inline");
+        main();
+    }
+});
 
     /* This function is called by the render function and is called on each game
      * tick. It's purpose is to then call the render functions you have defined
@@ -231,13 +236,7 @@ function checkCollisions() {
          player.render();
      }
 
-    /* This function does nothing but it could have been a good place to
-     * handle game reset states - maybe a new game menu or a game over screen
-     * those sorts of things. It's only called once by the init() method.
-     */
-     function reset() {
-        // noop
-    }
+
 
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when
@@ -250,7 +249,7 @@ function checkCollisions() {
         'images/enemy-bug.png',
         'images/char-boy.png',
         'images/char-pink-girl.png',
-        'images/char-princess-girl.png',
+        'images/char-horn-girl.png',
         'images/char-cat-girl.png',
         'images/Gem Blue.png',
         'images/button-next.png', // icon downloaded from http://www.iconarchive.com/

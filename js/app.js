@@ -51,29 +51,45 @@ var Player = function(x,y) {
     this.ry = this.y + 77;
     this.score = 0;
     this.sprite = 'images/char-boy.png';
+    this.wonPlaces = [];
 };
 // render function (player) draws player char on screen
 Player.prototype.render = function(){
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    //draw player char on all already won places
+    this.wonPlaces.forEach(function(won) {
+        ctx.drawImage(Resources.get(player.sprite), won.x, won.y);
+    });
 };
 
 //update function updates location of the player
 Player.prototype.update = function(dt){
-
 //checks if player cross the screen borders
 if(this.x>= ctx.canvas.width-65){
-    this.x = ctx.canvas.width-65
+    this.x-=95;
 } else if(this.x<=0){
-   // this.x+=diff[2];
+   this.x+=95;
 } else if(this.y<=0){
-   // this.y+=diff[3];
+   this.y= -10;
+   if(!this.wonPlaceExist(this.wonPlaces, this.x, this.y)){
+    this.wonPlaces.push({x:this.x, y:this.y});
+}
+this.resetLocation();
 }
 if(this.y>=ctx.canvas.height-171){
-    this.y = ctx.canvas.height-(171);
+    this.y-=95;
 }
 
 this.rx = this.x + 68;
 this.ry = this.y + 77;
+
+if(this.wonPlaces.length === 5) {
+    $(".heartContainer").css("display", "none");
+    $(".overlay").css("display", "block");
+    $("#winBox").css("display", "block");
+    this.wonPlaces = [];
+    this.lives = 5;
+}
 };
 // this function controls movement of player based on keyboard input
 Player.prototype.handleInput = function(inp){
@@ -97,6 +113,7 @@ Player.prototype.handleInput = function(inp){
     this.score += 10;
     this.update();
 };
+
 Player.prototype.updateLives = function(lives){
     switch(lives){
         case 4:
@@ -112,12 +129,31 @@ Player.prototype.updateLives = function(lives){
         $("#heart-two").css("display","none");
         break;
         case 0:
-        $("#heart-one").css("display","none");
+        player.lives = 5;
+        $(".heartContainer").css("display","none");
+        $(".overlay").css("display", "block");
+        $("#lostBox").css("display", "block");
         break;
         default:
         break;
     }
 };
+//set player location to start point
+Player.prototype.resetLocation = function() {
+    player.x = ctx.canvas.width/2-53.5;
+    player.y = 430;
+    player.render();
+}
+
+Player.prototype.wonPlaceExist = function(places, x, y){
+    for(var i=0; i<places.length; i++){
+        if(places[i].x==x && places[i].y==y){
+            return true;
+        }
+    }
+    return false;
+};
+
 
 // diff represents the white spaces around each character (to find exact collision):
 // diff[0] -> enemies x-whiteSpace/2
@@ -134,11 +170,9 @@ function collisionDetect(){
             //are overlapped !
             if(!(enemy.ry<player.y+diff[3] || player.ry<enemy.y+diff[1] ||
                 enemy.rx<player.x+diff[2] || player.rx < enemy.x+diff[0])){
-                player.x = ctx.canvas.width/2-53.5;
-            player.y = 430;
-            player.lives--;
-            player.updateLives(player.lives)
-            player.render();
+                player.lives--;
+            player.updateLives(player.lives);
+            player.resetLocation();
         }
     });
 }
