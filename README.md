@@ -1,4 +1,4 @@
-## Arcade Frogger
+## Classic Arcade Game Clone
 This project is another simple version of the classic Arcade Frogger game!
 
 ## Requirenments
